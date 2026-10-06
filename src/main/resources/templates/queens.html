@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizador N-Reinas - Backtracking</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 { color: #2c3e50; text-align: center; }
+        .form-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        input[type="number"] {
+            width: 80px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #2563eb; }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .metric-card strong { display: block; font-size: 22px; color: #1e293b; margin-top: 5px; }
+
+        .solutions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+        }
+        .board-wrapper {
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .board {
+            display: grid;
+            border: 2px solid #333;
+            margin-top: 10px;
+        }
+        .cell {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .cell.white { background-color: #f0d9b5; }
+        .cell.black { background-color: #b58863; }
+        .alert { color: #dc2626; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>👑 Algoritmo de Backtracking: N-Reinas</h1>
+
+    <!-- Formulario -->
+    <form th:action="@{/solve}" method="post" class="form-group">
+        <label for="boardSize">Tamaño del tablero (N):</label>
+        <input type="number" id="boardSize" name="boardSize" th:value="${boardSize}" min="1" max="12" required>
+        <button type="submit">Calcular Soluciones</button>
+    </form>
+
+    <div th:if="${error}" class="alert" th:text="${error}"></div>
+
+    <!-- Resultados y Métricas -->
+    <div th:if="${result}">
+        <h2>Métricas de Ejecución</h2>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <span>Soluciones Halladas</span>
+                <strong th:text="${result.totalSolutions}">0</strong>
+            </div>
+            <div class="metric-card">
+                <span>Evaluaciones de Nodos</span>
+                <strong th:text="${result.metrics.totalEvaluations}">0</strong>
+            </div>
+            <div class="metric-card">
+                <span>Paso Atrás (Backtracks)</span>
+                <strong th:text="${result.metrics.totalBacktracks}">0</strong>
+            </div>
+            <div class="metric-card">
+                <span>Tiempo de Ejecución</span>
+                <strong th:text="${#numbers.formatDecimal(result.metrics.executionTimeMs, 1, 3)} + ' ms'">0 ms</strong>
+            </div>
+        </div>
+
+        <h2>Soluciones Visuales</h2>
+        <div class="solutions-container">
+            <!-- Iterar sobre las soluciones -->
+            <div th:each="solution, solStat : ${result.solutions}" class="board-wrapper">
+                <h4 th:text="'Solución #' + ${solStat.count}">Solución #1</h4>
+
+                <!-- Dibujar tablero -->
+                <div class="board" th:style="'grid-template-columns: repeat(' + ${result.boardSize} + ', 38px);'">
+                    <div th:each="r : ${#numbers.sequence(0, result.boardSize - 1)}">
+                        <div th:each="c : ${#numbers.sequence(0, result.boardSize - 1)}"
+                             class="cell"
+                             th:classappend="${(r + c) % 2 == 0 ? 'white' : 'black'}">
+                            <span th:if="${solution.get(r) == c}">👑</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
