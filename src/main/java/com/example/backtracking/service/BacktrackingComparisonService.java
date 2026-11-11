@@ -34,12 +34,12 @@ public class BacktrackingComparisonService {
         int effectiveRuns = Math.max(1, runs);
 
         ApproachResult shared = benchmark(
-                "sharedMutable + clone()",
+                "Arreglo mutable + clone()",
                 () -> sharedMutableService.solveNQueens(n),
                 effectiveRuns);
 
         ApproachResult recursive = benchmark(
-                "recursiveState (snapshot por recursión)",
+                "Recursivo con bitmasks (sin arreglos)",
                 () -> recursiveService.solveNQueens(n),
                 effectiveRuns);
 

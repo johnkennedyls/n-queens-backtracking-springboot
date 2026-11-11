@@ -1,155 +1,361 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Visualizador N-Reinas - Backtracking</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        h1 { color: #2c3e50; text-align: center; }
-        .form-group {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        input[type="number"] {
-            width: 80px;
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid #cbd5e1;
-            border-radius: 6px;
-            text-align: center;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover { background-color: #2563eb; }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7f6;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+      }
+      .form-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+      input[type="number"] {
+        width: 80px;
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #cbd5e1;
+        border-radius: 6px;
+        text-align: center;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background-color: #2563eb;
+      }
 
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        .metric-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .metric-card strong { display: block; font-size: 22px; color: #1e293b; margin-top: 5px; }
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+      .metric-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .metric-card strong {
+        display: block;
+        font-size: 22px;
+        color: #1e293b;
+        margin-top: 5px;
+      }
 
-        .solutions-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            justify-content: center;
-        }
-        .board-wrapper {
-            background: #fff;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .board {
-            display: grid;
-            border: 2px solid #333;
-            margin-top: 10px;
-        }
-        .cell {
-            width: 38px;
-            height: 38px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            font-weight: bold;
-        }
-        .cell.white { background-color: #f0d9b5; }
-        .cell.black { background-color: #b58863; }
-        .alert { color: #dc2626; text-align: center; font-weight: bold; }
+      .solutions-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        justify-content: center;
+      }
+      .board-wrapper {
+        background: #fff;
+        padding: 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .board {
+        display: grid;
+        border: 2px solid #333;
+        margin-top: 10px;
+      }
+      .cell {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: bold;
+      }
+      .cell.white {
+        background-color: #f0d9b5;
+      }
+      .cell.black {
+        background-color: #b58863;
+      }
+      .alert {
+        color: #dc2626;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .comparison-section {
+        margin-top: 35px;
+      }
+      .comparison-subtitle {
+        text-align: center;
+        color: #64748b;
+        margin-top: -8px;
+        margin-bottom: 22px;
+      }
+      .bar-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .bar-label {
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+        flex: 0 0 260px;
+      }
+      .bar-label span {
+        color: #475569;
+        font-weight: bold;
+      }
+      .bar-track {
+        flex: 1 1 200px;
+        min-width: 150px;
+        background: #eef2f7;
+        border-radius: 999px;
+        height: 26px;
+        overflow: hidden;
+      }
+      .bar {
+        height: 100%;
+        border-radius: 999px;
+        transition: width 0.6s ease;
+      }
+      .bar-slow {
+        background: linear-gradient(90deg, #f97316, #ef4444);
+      }
+      .bar-fast {
+        background: linear-gradient(90deg, #22c55e, #16a34a);
+      }
+      .bar-stats {
+        font-size: 12px;
+        color: #64748b;
+        flex: 0 0 200px;
+      }
+      .verdict {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin: 22px 0;
+        font-size: 16px;
+      }
+      .speedup-badge {
+        background: #16a34a;
+        color: #fff;
+        padding: 4px 14px;
+        border-radius: 999px;
+        font-weight: bold;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="container">
+      <h1>👑 Algoritmo de Backtracking: N-Reinas</h1>
 
-<div class="container">
-    <h1>👑 Algoritmo de Backtracking: N-Reinas</h1>
-
-    <!-- Formulario -->
-    <form th:action="@{/solve}" method="post" class="form-group">
+      <!-- Formulario -->
+      <form th:action="@{/solve}" method="post" class="form-group">
         <label for="boardSize">Tamaño del tablero (N):</label>
-        <input type="number" id="boardSize" name="boardSize" th:value="${boardSize}" min="1" max="12" required>
-        <button type="submit">Calcular Soluciones</button>
-    </form>
+        <input
+          type="number"
+          id="boardSize"
+          name="boardSize"
+          th:value="${boardSize}"
+          min="1"
+          max="12"
+          required
+        />
+        <label for="runs">Ejecuciones:</label>
+        <input
+          type="number"
+          id="runs"
+          name="runs"
+          th:value="${runs}"
+          min="1"
+          max="200"
+          required
+        />
+        <button type="submit">Calcular y Comparar</button>
+      </form>
 
-    <div th:if="${error}" class="alert" th:text="${error}"></div>
+      <div th:if="${error}" class="alert" th:text="${error}"></div>
 
-    <!-- Resultados y Métricas -->
-    <div th:if="${result}">
+      <!-- Resultados y Métricas -->
+      <div th:if="${result}">
         <h2>Métricas de Ejecución</h2>
         <div class="metrics-grid">
+          <div class="metric-card">
+            <span>Soluciones Halladas</span>
+            <strong th:text="${result.totalSolutions}">0</strong>
+          </div>
+          <div class="metric-card">
+            <span>Evaluaciones de Nodos</span>
+            <strong th:text="${result.metrics.totalEvaluations}">0</strong>
+          </div>
+          <div class="metric-card">
+            <span>Paso Atrás (Backtracks)</span>
+            <strong th:text="${result.metrics.totalBacktracks}">0</strong>
+          </div>
+          <div class="metric-card">
+            <span>Tiempo de Ejecución</span>
+            <strong
+              th:text="${#numbers.formatDecimal(result.metrics.executionTimeMs, 1, 3)} + ' ms'"
+              >0 ms</strong
+            >
+          </div>
+        </div>
+
+        <div th:if="${comparison}" class="comparison-section">
+          <h2>⏱️ Comparación de Tiempos de Ejecución</h2>
+          <p
+            class="comparison-subtitle"
+            th:text="'Tablero N=' + ${comparison.boardSize} + ' · ' + ${comparison.runs} + ' ejecuciones por estrategia (con warmup del JIT)'"
+          ></p>
+
+          <div
+            th:with="maxAvg=${comparison.sharedMutable.avgTimeMs > comparison.recursiveState.avgTimeMs ? comparison.sharedMutable.avgTimeMs : comparison.recursiveState.avgTimeMs}"
+          >
+            <div class="bar-row">
+              <div class="bar-label">
+                <strong th:text="${comparison.sharedMutable.name}"
+                  >Arreglo</strong
+                >
+                <span
+                  th:text="${#numbers.formatDecimal(comparison.sharedMutable.avgTimeMs, 1, 4)} + ' ms (avg)'"
+                  >0 ms</span
+                >
+              </div>
+              <div class="bar-track">
+                <div
+                  class="bar"
+                  th:classappend="${comparison.sharedMutable.avgTimeMs <= comparison.recursiveState.avgTimeMs ? 'bar-fast' : 'bar-slow'}"
+                  th:style="'width:' + ${maxAvg == 0 ? 0 : (comparison.sharedMutable.avgTimeMs / maxAvg * 100)} + '%'"
+                ></div>
+              </div>
+              <div
+                class="bar-stats"
+                th:text="'min ' + ${#numbers.formatDecimal(comparison.sharedMutable.minTimeMs, 1, 4)} + ' ms · max ' + ${#numbers.formatDecimal(comparison.sharedMutable.maxTimeMs, 1, 4)} + ' ms'"
+              ></div>
+            </div>
+
+            <div class="bar-row">
+              <div class="bar-label">
+                <strong th:text="${comparison.recursiveState.name}"
+                  >Recursivo</strong
+                >
+                <span
+                  th:text="${#numbers.formatDecimal(comparison.recursiveState.avgTimeMs, 1, 4)} + ' ms (avg)'"
+                  >0 ms</span
+                >
+              </div>
+              <div class="bar-track">
+                <div
+                  class="bar"
+                  th:classappend="${comparison.recursiveState.avgTimeMs <= comparison.sharedMutable.avgTimeMs ? 'bar-fast' : 'bar-slow'}"
+                  th:style="'width:' + ${maxAvg == 0 ? 0 : (comparison.recursiveState.avgTimeMs / maxAvg * 100)} + '%'"
+                ></div>
+              </div>
+              <div
+                class="bar-stats"
+                th:text="'min ' + ${#numbers.formatDecimal(comparison.recursiveState.minTimeMs, 1, 4)} + ' ms · max ' + ${#numbers.formatDecimal(comparison.recursiveState.maxTimeMs, 1, 4)} + ' ms'"
+              ></div>
+            </div>
+          </div>
+
+          <div class="verdict">
+            <span>Más rápido:</span>
+            <strong th:text="${comparison.fasterApproach}">—</strong>
+            <span
+              class="speedup-badge"
+              th:text="'×' + ${#numbers.formatDecimal(comparison.speedupFactor, 1, 2)}"
+              >×1</span
+            >
+          </div>
+
+          <div class="metrics-grid">
             <div class="metric-card">
-                <span>Soluciones Halladas</span>
-                <strong th:text="${result.totalSolutions}">0</strong>
+              <span>Evaluaciones · Arreglo</span>
+              <strong th:text="${comparison.sharedMutable.totalEvaluations}"
+                >0</strong
+              >
             </div>
             <div class="metric-card">
-                <span>Evaluaciones de Nodos</span>
-                <strong th:text="${result.metrics.totalEvaluations}">0</strong>
+              <span>Evaluaciones · Recursivo</span>
+              <strong th:text="${comparison.recursiveState.totalEvaluations}"
+                >0</strong
+              >
             </div>
             <div class="metric-card">
-                <span>Paso Atrás (Backtracks)</span>
-                <strong th:text="${result.metrics.totalBacktracks}">0</strong>
+              <span>Backtracks (ambos)</span>
+              <strong th:text="${comparison.recursiveState.totalBacktracks}"
+                >0</strong
+              >
             </div>
             <div class="metric-card">
-                <span>Tiempo de Ejecución</span>
-                <strong th:text="${#numbers.formatDecimal(result.metrics.executionTimeMs, 1, 3)} + ' ms'">0 ms</strong>
+              <span>Soluciones (ambos)</span>
+              <strong th:text="${comparison.recursiveState.totalSolutions}"
+                >0</strong
+              >
             </div>
+          </div>
         </div>
 
         <h2>Soluciones Visuales</h2>
         <div class="solutions-container">
-            <!-- Iterar sobre las soluciones -->
-            <div th:each="solution, solStat : ${result.solutions}" class="board-wrapper">
-                <h4 th:text="'Solución #' + ${solStat.count}">Solución #1</h4>
+          <!-- Iterar sobre las soluciones -->
+          <div
+            th:each="solution, solStat : ${result.solutions}"
+            class="board-wrapper"
+          >
+            <h4 th:text="'Solución #' + ${solStat.count}">Solución #1</h4>
 
-                <!-- Dibujar tablero -->
-                <div class="board" th:style="'grid-template-columns: repeat(' + ${result.boardSize} + ', 38px);'">
-                    <div th:each="r : ${#numbers.sequence(0, result.boardSize - 1)}">
-                        <div th:each="c : ${#numbers.sequence(0, result.boardSize - 1)}"
-                             class="cell"
-                             th:classappend="${(r + c) % 2 == 0 ? 'white' : 'black'}">
-                            <span th:if="${solution.get(r) == c}">👑</span>
-                        </div>
-                    </div>
+            <!-- Dibujar tablero -->
+            <div
+              class="board"
+              th:style="'grid-template-columns: repeat(' + ${result.boardSize} + ', 38px);'"
+            >
+              <div th:each="r : ${#numbers.sequence(0, result.boardSize - 1)}">
+                <div
+                  th:each="c : ${#numbers.sequence(0, result.boardSize - 1)}"
+                  class="cell"
+                  th:classappend="${(r + c) % 2 == 0 ? 'white' : 'black'}"
+                >
+                  <span th:if="${solution.get(r) == c}">👑</span>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-
-</body>
+  </body>
 </html>
